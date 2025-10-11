@@ -48,13 +48,13 @@ export default function Header() {
                 <FaSearch className="w-6 h-6 text-white" />
               </button>
             ) : (
-              <form onSubmit={handleSearch} className="flex items-center mx-4">
+              <form onSubmit={handleSearch} className="flex items-center mx-4 text-white">
                 <input
                   type="text"
                   placeholder="Search videos..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="px-4 py-2 rounded-full focus:outline-none placeholder:text-white"
+                  className="px-4 py-2 rounded-full focus:outline-none placeholder:text-white border-1"
                 />
                 <button type="button" onClick={handleSearchToggle} className="ml-2">
                   <IoClose className="w-6 h-6 text-white" />

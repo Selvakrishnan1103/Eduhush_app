@@ -18,6 +18,15 @@ const VideoSchema = new mongoose.Schema({
       author: { type: String, required: true },
     },
   ],
+  keywords: {
+    type: [String],
+    validate: {
+      validator: function (arr) {
+        return arr.length <= 5;
+      },
+      message: 'You can add up to 5 keywords only.',
+    },
+  },
 });
 
 const Video = mongoose.models.Video || mongoose.model('Video', VideoSchema);

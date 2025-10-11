@@ -7,13 +7,13 @@ export async function POST(req) {
     await connectToMongoDb();
     const body = await req.json();
 
-    const { title, videoUrl, thumbnailUrl, uploadedBy } = body;
+    const { title, videoUrl, thumbnailUrl, uploadedBy, keywords } = body;
 
     if (!title || !videoUrl || !uploadedBy) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
     }
 
-    const video = await Video.create({ title, videoUrl, thumbnailUrl, uploadedBy });
+    const video = await Video.create({ title, videoUrl, thumbnailUrl, uploadedBy, keywords: keywords || [] });
 
     return NextResponse.json({ success: true, video }, { status: 201 });
   } catch (err) {

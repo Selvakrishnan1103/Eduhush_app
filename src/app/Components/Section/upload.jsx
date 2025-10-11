@@ -11,6 +11,8 @@ export default function Upload() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [title, setTitle] = useState('');
+  const [keywords, setKeywords] = useState([]);
+  const [keywordInput, setKeywordInput] = useState('');
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -20,6 +22,29 @@ export default function Upload() {
 
   const handleThumbnailChange = (e) => {
     setThumbnail(e.target.files[0]);
+  };
+
+  const handleAddKeyword = () => {
+    const word = keywordInput.trim();
+    if (!word) return;
+
+    if (keywords.length >= 5) {
+      setError('You can add up to 5 keywords only.');
+      return;
+    }
+
+    if (keywords.includes(word)) {
+      setError('Keyword already added.');
+      return;
+    }
+
+    setKeywords([...keywords, word]);
+    setKeywordInput('');
+    setError('');
+  };
+
+  const handleRemoveKeyword = (word) => {
+    setKeywords(keywords.filter((k) => k !== word));
   };
 
   const handleUpload = async () => {
@@ -38,6 +63,11 @@ export default function Upload() {
       return;
     }
 
+    if (keywords.length === 0) {
+      setError('Please enter at least one keyword.');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('video', file);
 
@@ -45,7 +75,7 @@ export default function Upload() {
       setLoading(true);
       setError('');
 
-      const classifyRes = await fetch('http://192.168.0.111:5000/classify', {
+      const classifyRes = await fetch('http://127.0.0.1:5000/classify', {
         method: 'POST',
         body: formData,
       });
@@ -72,7 +102,6 @@ export default function Upload() {
         thumbForm.append('file', thumbnail);
         thumbForm.append('upload_preset', 'eduhush-thumbnails');
 
-
         const thumbRes = await fetch('https://api.cloudinary.com/v1_1/dv3ggy4va/image/upload', {
           method: 'POST',
           body: thumbForm,
@@ -90,6 +119,7 @@ export default function Upload() {
             videoUrl,
             thumbnailUrl,
             title,
+            keywords,
             uploadedBy: session?.user?.name || 'anonymous',
           }),
         });
@@ -100,6 +130,7 @@ export default function Upload() {
         setFile(null);
         setThumbnail(null);
         setTitle('');
+        setKeywords([]);
       }
 
     } catch (err) {
@@ -110,7 +141,7 @@ export default function Upload() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-10 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-20 px-4">
       <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-2xl">
         <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Upload & Classify Video</h1>
 
@@ -123,6 +154,43 @@ export default function Upload() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 font-medium mb-1">Keywords (max 5)</label>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              placeholder="Add keyword..."
+              value={keywordInput}
+              onChange={(e) => setKeywordInput(e.target.value)}
+              className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              type="button"
+              onClick={handleAddKeyword}
+              className="px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              +
+            </button>
+          </div>
+
+          <div className="flex flex-wrap gap-2 mt-2">
+            {keywords.map((word, idx) => (
+              <span
+                key={idx}
+                className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm flex items-center gap-2"
+              >
+                {word}
+                <button
+                  onClick={() => handleRemoveKeyword(word)}
+                  className="text-red-500 hover:text-red-700 font-bold"
+                >
+                  ✕
+                </button>
+              </span>
+            ))}
+          </div>
         </div>
 
         <div className="mb-4">
@@ -164,6 +232,5 @@ export default function Upload() {
         )}
       </div>
     </div>
-
   );
 }
