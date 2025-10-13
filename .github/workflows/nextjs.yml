@@ -1,0 +1,29 @@
+name: Nextjs-CI
+
+on:
+  push:
+    branches: [main]
+
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check code
+        uses: actions/checkout@v4
+    
+      - name: Set up Nextjs
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Lint Check for Style
+        run: npm run lint
+
+      - name: Building Nextjs app
+        run: npm run build
