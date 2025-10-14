@@ -94,7 +94,7 @@ export default function VideoDetails() {
         <video
           src={video.videoUrl}
           controls
-          className="w-full h-full object-contain bg-black"
+          className="w-full h-full object-cover bg-black"
           poster={video.thumbnailUrl}
         />
       </div>
