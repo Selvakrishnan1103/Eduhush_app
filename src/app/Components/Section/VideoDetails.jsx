@@ -67,7 +67,7 @@ export default function VideoDetails() {
       <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md animate-pulse space-y-6">
         <div className="h-8 bg-gray-300 rounded w-3/4" />
         <div className="h-4 bg-gray-200 rounded w-1/2" />
-        <div className="w-full h-[250px] bg-gray-300 rounded-lg" />
+        <div className="w-full h-[200px] lg:h-[400px] bg-gray-300 rounded-lg" />
         <div className="flex gap-3 flex-wrap">
           <div className="h-10 w-24 bg-gray-300 rounded" />
           <div className="h-10 w-28 bg-gray-300 rounded" />
@@ -90,7 +90,7 @@ export default function VideoDetails() {
         👁️ {video.views || 0} views • Uploaded on {new Date(video.createdAt).toLocaleDateString()}
       </p>
 
-      <div className="w-full h-[200px] lg:h-[400px] bg-black rounded-lg overflow-hidden mb-4">
+      <div className="w-full h-[200px] lg:h-[400px] bg-black rounded-lg overflow-hidden mb-4 border-2 border-solid border-blue-600">
         <video
           src={video.videoUrl}
           controls
