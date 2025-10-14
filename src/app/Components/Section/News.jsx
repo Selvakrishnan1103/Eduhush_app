@@ -13,10 +13,10 @@ export default function News() {
   const [imageUrl, setImageUrl] = useState('');
   const [imageFile, setImageFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [isNewsLoading, setIsNewsLoading] = useState(true); // Track news loading state
+  const [isNewsLoading, setIsNewsLoading] = useState(true);
 
   const fetchNews = async () => {
-    setIsNewsLoading(true); // Set to true before fetching
+    setIsNewsLoading(true); 
     try {
       const res = await fetch('/api/news');
       if (!res.ok) throw new Error('Failed to fetch news');
@@ -25,7 +25,7 @@ export default function News() {
     } catch (error) {
       console.error('Error fetching news:', error);
     } finally {
-      setIsNewsLoading(false); // Set to false after data is fetched
+      setIsNewsLoading(false); 
     }
   };
 
@@ -94,7 +94,6 @@ export default function News() {
 
       {isAdmin && (
         <div className="mb-6 bg-white shadow p-4 rounded-md">
-          {/* Skeleton for Admin Post Form */}
           {isUploading || loading ? (
             <div className="animate-pulse space-y-4">
               <div className="h-10 bg-gray-300 rounded w-full" />
@@ -140,7 +139,6 @@ export default function News() {
       )}
 
       <div className="space-y-4">
-        {/* Skeleton for News Posts */}
         {isNewsLoading ? (
           <>
             {[...Array(3)].map((_, idx) => (
@@ -158,11 +156,13 @@ export default function News() {
           newsList.map((news) => (
             <div key={news._id} className="bg-white p-4 rounded-md shadow">
               {news.image && (
-                <img
-                  src={news.image}
-                  alt={news.title}
-                  className="w-full h-auto rounded mb-2"
-                />
+                <div className='flex justify-center items-center w-full h-auto'>
+                    <img
+                    src={news.image}
+                    alt={news.title}
+                    className="w-[300px] h-auto rounded mb-2"
+                  />
+                </div>
               )}
               <h2 className="text-xl font-semibold text-[#3C7BAA]">{news.title}</h2>
               <p className="mt-1 text-gray-700 whitespace-pre-line">{news.content}</p>
