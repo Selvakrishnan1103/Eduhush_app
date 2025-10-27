@@ -75,7 +75,7 @@ export default function Upload() {
       setLoading(true);
       setError('');
 
-      const classifyRes = await fetch('https://selva1103-eduhush-classify.hf.space/', {
+      const classifyRes = await fetch('https://selva1103-eduhush-classify.hf.space/classify', {
         method: 'POST',
         body: formData,
       });
