@@ -1,10 +1,13 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
 
 export default function Upload() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter()
   const [file, setFile] = useState(null);
   const [thumbnail, setThumbnail] = useState(null);
   const [result, setResult] = useState(null);
@@ -14,6 +17,12 @@ export default function Upload() {
   const [keywords, setKeywords] = useState([]);
   const [keywordInput, setKeywordInput] = useState('');
 
+
+  useEffect(()=>{
+    if (status === "unauthenticated"){
+      router.push('/login')
+    }
+  },[status, router])
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
     setResult(null);
@@ -139,7 +148,21 @@ export default function Upload() {
       setLoading(false);
     }
   };
+  if (status === 'loading') {
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <p className="text-xl font-semibold text-gray-600">Loading...</p>
+      </div>
+    );
+  }
 
+  if (status === 'unauthenticated') {
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <p className="text-xl font-semibold text-gray-600">Redirecting to login...</p>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-20 px-4">
       <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-2xl">
