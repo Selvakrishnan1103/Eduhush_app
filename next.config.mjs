@@ -1,7 +1,15 @@
-// next.config.js
+
 const nextConfig = {
   images: {
-    domains: ['res.cloudinary.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+    ],
+  },
+  experimental: {
+    allowedDevOrigins: ['http://192.168.0.120:3000'],
   },
 };
 
