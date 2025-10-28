@@ -5,7 +5,7 @@ export const metadata = {
   title: "EduHush",
   description: "A study-based video platform",
   icons: {
-    icon: "/favicon_edu_v2.png",
+    icon: "/favicon_edu_v3.png",
   },
 };
 
