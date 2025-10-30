@@ -13,8 +13,8 @@ import {
   Database,
   Sparkles,
   XCircle,
+  Plus
 } from 'lucide-react';
-
 export default function Upload() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -178,7 +178,7 @@ export default function Upload() {
                     <input
                       type="text"
                       placeholder="Enter video title"
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                      className="w-full p-3 border border-blue-500 rounded-lg focus:outline-blue-500"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                     />
@@ -192,15 +192,18 @@ export default function Upload() {
                         placeholder="Add keyword..."
                         value={keywordInput}
                         onChange={(e) => setKeywordInput(e.target.value)}
-                        className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        className="flex-1 p-3 border border-blue-500 rounded-lg focus:outline-blue-500"
                       />
+                      
                       <button
                         type="button"
                         onClick={handleAddKeyword}
-                        className="bg-blue-600 text-white px-4 rounded-lg hover:bg-blue-700"
+                        title="Add Keyword"
+                        className="bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition"
                       >
-                        +
+                        <Plus size={20} />
                       </button>
+
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {keywords.map((word, idx) => (
@@ -228,7 +231,7 @@ export default function Upload() {
                       type="file"
                       accept="video/*"
                       onChange={(e) => setFile(e.target.files[0])}
-                      className="w-full p-3 border border-gray-300 rounded-lg"
+                      className="w-full p-3 border border-blue-300 rounded-lg focus:outline-blue-500"
                     />
                   </div>
 
@@ -240,7 +243,7 @@ export default function Upload() {
                       type="file"
                       accept="image/*"
                       onChange={(e) => setThumbnail(e.target.files[0])}
-                      className="w-full p-3 border border-gray-300 rounded-lg"
+                      className="w-full p-3 border border-blue-300 rounded-lg focus:outline-blue-500"
                     />
                   </div>
                 </div>
