@@ -1,5 +1,4 @@
 'use client';
-
 import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -10,11 +9,11 @@ import {
   UploadCloud,
   Brain,
   Image,
-  Database,
-  Sparkles,
   XCircle,
+  Sparkles,
   Plus
 } from 'lucide-react';
+
 export default function Upload() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -28,7 +27,7 @@ export default function Upload() {
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const [finished, setFinished] = useState(false); // shows final success/failure screen
+  const [finished, setFinished] = useState(false);
 
   useEffect(() => {
     if (status === 'unauthenticated') router.push('/login');
@@ -62,48 +61,56 @@ export default function Upload() {
   };
 
   const handleUpload = async () => {
-    setError('');
-    setSuccess(false);
-    setFinished(false);
-
     if (!file || !title.trim() || !thumbnail || keywords.length === 0) {
       setError('Please fill all fields.');
       return;
     }
 
+    setError('');
+    setSuccess(false);
+    setFinished(false);
+
     try {
-      setLoadingStep('classify');
-      const formData = new FormData();
-      formData.append('video', file);
-      const classifyRes = await fetch(
-        'https://selva1103-eduhush-classify.hf.space/classify',
+      // Step 1: Upload video to Cloudinary
+      setLoadingStep('uploading');
+      const videoFormData = new FormData();
+      videoFormData.append('file', file);
+      videoFormData.append('upload_preset', 'eduhush_unsigned');
+      videoFormData.append('resource_type', 'video');
+
+      const uploadResponse = await fetch(
+        'https://api.cloudinary.com/v1_1/dv3ggy4va/video/upload',
         {
           method: 'POST',
-          body: formData,
+          body: videoFormData,
         }
       );
+      if (!uploadResponse.ok) throw new Error('Video upload failed');
+      const uploadData = await uploadResponse.json();
+      const videoUrl = uploadData.secure_url;
 
-      if (!classifyRes.ok) throw new Error('Classification failed');
-      const { prediction } = await classifyRes.json();
-      setResult(prediction);
+      // Step 2: Check with Flask model
+      setLoadingStep('checking');
+      const checkResponse = await fetch(
+        'https://selva1103-testing-classify.hf.space/classify',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ video_url: videoUrl }),
+        }
+      );
+      const checkData = await checkResponse.json();
+      setResult(checkData);
 
-      if (prediction !== 1) {
-        setError('❌ This video is not educational.');
-        setLoadingStep('');
+      console.log(checkData.prediction)
+      if (checkData.prediction !== 1) {
+        setError('❌ Not an educational video.');
         setFinished(true);
+        setLoadingStep('');
         return;
       }
 
-      setLoadingStep('video');
-      const cloudForm = new FormData();
-      cloudForm.append('file', file);
-      const uploadRes = await fetch('/api/upload-video', {
-        method: 'POST',
-        body: cloudForm,
-      });
-      if (!uploadRes.ok) throw new Error('Cloudinary upload failed');
-      const { url: videoUrl } = await uploadRes.json();
-
+      // Step 3: Upload thumbnail
       setLoadingStep('thumbnail');
       const thumbForm = new FormData();
       thumbForm.append('file', thumbnail);
@@ -119,8 +126,8 @@ export default function Upload() {
       const thumbData = await thumbRes.json();
       const thumbnailUrl = thumbData.secure_url;
 
-      setLoadingStep('database');
-      const saveRes = await fetch('/api/save-video', {
+      setLoadingStep('saving');
+      await fetch('/api/save-video', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -131,23 +138,22 @@ export default function Upload() {
           uploadedBy: session?.user?.name || 'anonymous',
         }),
       });
-      if (!saveRes.ok) throw new Error('Database save failed');
 
-      setLoadingStep('done');
       setSuccess(true);
       setFinished(true);
+      setLoadingStep('done');
     } catch (err) {
       setError(err.message || 'Something went wrong.');
-      setLoadingStep('');
       setFinished(true);
+      setLoadingStep('');
     }
   };
 
   const steps = [
-    { id: 'classify', label: 'Analyzing Video...', icon: Brain, color: 'text-blue-500' },
-    { id: 'video', label: 'Uploading Video...', icon: UploadCloud, color: 'text-indigo-500' },
+    { id: 'uploading', label: 'Uploading Video...', icon: UploadCloud, color: 'text-blue-500' },
+    { id: 'checking', label: 'Checking Educational Content...', icon: Brain, color: 'text-indigo-500' },
     { id: 'thumbnail', label: 'Uploading Thumbnail...', icon: Image, color: 'text-purple-500' },
-    { id: 'database', label: 'Saving Data...', icon: Database, color: 'text-green-500' },
+    { id: 'saving', label: 'Saving Data...', icon: CheckCircle, color: 'text-green-500' },
   ];
 
   return (
@@ -171,6 +177,7 @@ export default function Upload() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
+              {/* FORM */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div>
@@ -194,7 +201,6 @@ export default function Upload() {
                         onChange={(e) => setKeywordInput(e.target.value)}
                         className="flex-1 p-3 border border-blue-500 rounded-lg focus:outline-blue-500"
                       />
-                      
                       <button
                         type="button"
                         onClick={handleAddKeyword}
@@ -203,7 +209,6 @@ export default function Upload() {
                       >
                         <Plus size={20} />
                       </button>
-
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {keywords.map((word, idx) => (
@@ -236,9 +241,7 @@ export default function Upload() {
                   </div>
 
                   <div>
-                    <label className="block font-semibold text-gray-700 mb-1">
-                      Thumbnail Image
-                    </label>
+                    <label className="block font-semibold text-gray-700 mb-1">Thumbnail Image</label>
                     <input
                       type="file"
                       accept="image/*"
@@ -260,13 +263,14 @@ export default function Upload() {
             </motion.div>
           )}
 
+          {/* PROGRESS STEPS */}
           {loadingStep && !finished && (
             <motion.div key="steps" className="space-y-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               {steps.map((step) => {
                 const Icon = step.icon;
                 const isDone =
-                  loadingStep === 'done' ||
-                  steps.findIndex((s) => s.id === step.id) < steps.findIndex((s) => s.id === loadingStep);
+                  steps.findIndex((s) => s.id === step.id) <
+                  steps.findIndex((s) => s.id === loadingStep);
 
                 return (
                   <div
@@ -293,6 +297,7 @@ export default function Upload() {
             </motion.div>
           )}
 
+          {/* FINAL RESULT */}
           {finished && (
             <motion.div
               key="result"
@@ -303,9 +308,7 @@ export default function Upload() {
               {success ? (
                 <>
                   <Sparkles className="mx-auto w-16 h-16 text-green-500" />
-                  <h2 className="text-2xl font-bold text-green-600">
-                    Upload Complete 🎉
-                  </h2>
+                  <h2 className="text-2xl font-bold text-green-600">Upload Complete 🎉</h2>
                   <p className="text-gray-600">
                     Your educational video has been uploaded successfully!
                   </p>
@@ -325,7 +328,6 @@ export default function Upload() {
               </button>
             </motion.div>
           )}
-          
         </AnimatePresence>
       </motion.div>
     </div>
