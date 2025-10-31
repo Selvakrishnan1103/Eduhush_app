@@ -32,13 +32,13 @@ export default function UserFeedbackPage() {
 
   return (
     <div className="pt-28 px-6 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">User Feedback</h1>
+      <h1 className="text-2xl font-bold mb-4 text-[#3C7BAA]">Tell Us</h1>
       {submitted ? (
         <p className="text-green-600">Thank you for your feedback!</p>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
           <textarea
-            className="w-full border rounded p-3"
+            className="w-full border border-blue-600 rounded p-3 focus:outline:none focus:outline-blue-600"
             rows="5"
             placeholder="Share your thoughts or issues..."
             value={feedback}

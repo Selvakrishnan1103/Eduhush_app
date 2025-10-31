@@ -164,8 +164,8 @@ export default function Upload() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <h1 className="text-3xl md:text-4xl font-bold text-center mb-8 text-gray-800">
-          Upload Your Educational Video 🎓
+        <h1 className="text-2xl md:text-2xl lg:text-3xl font-bold text-center mb-8 text-[#3C7BAA]">
+          Edu Upload 🎓
         </h1>
 
         <AnimatePresence>

@@ -31,7 +31,7 @@ export default function ProfileCard({ user }) {
         <div>
           <h2 className="text-xl font-semibold">{user.name}</h2>
           <p className="text-gray-500">{user.email}</p>
-          <button className="mt-2 text-sm text-blue-600 hover:underline"><Link href="/dashboard/edit-profile">Edit Profile</Link></button>
+          <button className="mt-2 text-sm text-[#3C7BAA] hover:underline"><Link href="/dashboard/edit-profile">Edit Profile</Link></button>
         </div>
       </div>
     );

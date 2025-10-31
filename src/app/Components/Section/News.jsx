@@ -90,7 +90,7 @@ export default function News() {
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-4 text-[#3C7BAA]">📰 Educational News</h1>
+      <h1 className="text-3xl md:text-3xl lg:text-4xl text-[#3C7BAA] font-bold mb-4 text-[#3C7BAA] text-center">Edu Buzz 📰</h1>
 
       {isAdmin && (
         <div className="mb-6 bg-white shadow p-4 rounded-md">

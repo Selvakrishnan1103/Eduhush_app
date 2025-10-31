@@ -7,7 +7,7 @@ export default function Notification() {
   const [appNotif, setAppNotif] = useState(false);
 
   return (
-    <div className="pt-28 px-6 max-w-xl mx-auto">
+    <div className="pt-28 px-6 max-w-xl mx-auto text-[#3C7BAA]">
       <h1 className="text-2xl font-bold mb-6">Notification Settings</h1>
 
       <div className="space-y-4">

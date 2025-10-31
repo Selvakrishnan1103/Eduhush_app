@@ -39,7 +39,7 @@ export default function Forum() {
 
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <h1 className="text-3xl font-bold mb-6 text-blue-700">📣 Public Forum</h1>
+      <h1 className="text-3xl md:text-3xl lg:text-4xl font-bold mb-6 text-[#3C7BAA] text-center">Open Talk 📣</h1>
 
       {session && (
         <div className="mb-8">
@@ -56,7 +56,7 @@ export default function Forum() {
               disabled={loading}
               className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 transition-all"
             >
-              {loading ? 'Posting...' : 'Post Message'}
+              {loading ? 'Voicing...' : 'Voice It'}
             </button>
           </div>
         </div>
