@@ -154,7 +154,7 @@ export default function News() {
           </>
         ) : newsList.length > 0 ? (
           newsList.map((news) => (
-            <div key={news._id} className="bg-white p-4 rounded-md shadow">
+            <div key={news._id} className="bg-[#3C7BAA] text-white p-4 rounded-md shadow">
               {news.image && (
                 <div className='flex justify-center items-center w-full h-auto'>
                     <img
@@ -165,8 +165,8 @@ export default function News() {
                 </div>
               )}
               <h2 className="text-xl font-semibold text-[#3C7BAA]">{news.title}</h2>
-              <p className="mt-1 text-gray-700 whitespace-pre-line">{news.content}</p>
-              <p className="text-sm text-gray-500 mt-2">
+              <p className="mt-1 whitespace-pre-line">{news.content}</p>
+              <p className="text-sm  mt-2">
                 by {news.author} • {new Date(news.createdAt).toLocaleString()}
               </p>
             </div>

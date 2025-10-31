@@ -86,10 +86,10 @@ export default function Forum() {
             .map((post) => (
               <div
                 key={post._id}
-                className="p-4 border border-gray-200 rounded-md shadow-sm bg-gray-50 hover:bg-gray-100 transition"
+                className="p-4 border border-gray-200 rounded-md shadow-sm bg-[#3C7BAA] text-white  transition"
               >
-                <p className="text-gray-800 text-lg mb-1">{post.content}</p>
-                <p className="text-sm text-gray-500">
+                <p className=" text-lg mb-1">{post.content}</p>
+                <p className="text-sm">
                   by <span className="font-medium">{post.author}</span> •{' '}
                   {new Date(post.createdAt).toLocaleString()}
                 </p>

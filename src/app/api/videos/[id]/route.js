@@ -18,7 +18,8 @@ function extractPublicId(url) {
 export async function GET(req, { params }) {
   try {
     await connectToMongoDb();
-    const videoId = params.id;
+    const param = await params
+    const videoId = param.id;
 
     const video = await Video.findById(videoId);
 
