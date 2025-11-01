@@ -1,24 +1,26 @@
-
-import { NextResponse } from 'next/server';
-import {connectToMongoDb} from '@/lib/mongoDb';
-import Video from '@/models/Video';
+import { NextResponse } from "next/server";
+import { connectToMongoDb } from "@/lib/mongoDb";
+import Video from "@/models/Video";
+import View from "@/models/View";
 
 export async function PATCH(req, { params }) {
   await connectToMongoDb();
-  const param = await params
-  const { id } = param;
+  const param = await params;
+  const { id } = param.id;
+
+  const ip = req.headers.get("x-forwarded-for") || "unknown";
 
   try {
-    const video = await Video.findById(id);
-    if (!video) {
-      return NextResponse.json({ error: 'Video not found' }, { status: 404 });
+    const alreadyViewed = await View.findOne({ videoId: id, ip });
+    if (alreadyViewed) {
+      return NextResponse.json({ message: "Already viewed" }, { status: 200 });
     }
 
-    video.views = (video.views || 0) + 1;
-    await video.save();
+    await View.create({ videoId: id, ip });
+    await Video.findByIdAndUpdate(id, { $inc: { views: 1 } });
 
-    return NextResponse.json({ message: 'View counted' }, { status: 200 });
+    return NextResponse.json({ message: "View counted" }, { status: 200 });
   } catch (err) {
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

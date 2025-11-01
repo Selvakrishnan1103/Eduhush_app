@@ -27,15 +27,27 @@ export default function VideoDetails() {
   const [showShareModal, setShowShareModal] = useState(false);
 
   useEffect(() => {
-    if (id) {
-      trackView();
-      fetchVideo();
+    if (!id) return;
+
+    const viewedVideos = JSON.parse(localStorage.getItem("viewedVideos") || "[]");
+
+    if (!viewedVideos.includes(id)) {
+      // Call your existing PATCH API only once per video
+      fetch(`/api/videos/${id}/view`, { method: "PATCH" })
+        .then(() => {
+          // Mark this video as viewed in localStorage
+          localStorage.setItem(
+            "viewedVideos",
+            JSON.stringify([...viewedVideos, id])
+          );
+        })
+        .catch((err) => console.error("View tracking error:", err));
     }
+
+    // Fetch video details every time (so it always shows latest views/comments)
+    fetchVideo();
   }, [id]);
 
-  const trackView = async () => {
-    await fetch(`/api/videos/${id}/view`, { method: 'PATCH' });
-  };
 
   const fetchVideo = async () => {
     const res = await fetch(`/api/videos/${id}`);
