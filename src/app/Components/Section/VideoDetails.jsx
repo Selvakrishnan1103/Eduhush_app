@@ -82,8 +82,9 @@ export default function VideoDetails() {
         },
         body: JSON.stringify({
           videoId: video._id,
-          reportedBy: session?.user?.id, 
+          reportedBy: session?.user?.email, 
           uploadedBy: video.uploadedBy,  
+          uploadedByEmail: video.uploadedByEmail,
         }),
       });
 

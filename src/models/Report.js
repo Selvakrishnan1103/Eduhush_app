@@ -7,10 +7,15 @@ const reportSchema = new mongoose.Schema({
     required: true,
   },
   reportedBy: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     required: true,
   },
   uploadedBy: {
+    type: String, 
+    required: true,
+  },
+  uploadedByEmail: {
     type: String, 
     required: true,
   },

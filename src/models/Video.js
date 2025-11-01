@@ -5,6 +5,7 @@ const VideoSchema = new mongoose.Schema({
   videoUrl: { type: String, required: true },
   thumbnailUrl: { type: String, required: true },
   uploadedBy: { type: String, required: true },
+  uploadedByEmail : { type: String , required: true},
   createdAt: { type: Date, default: Date.now },
   likes: { type: Number, default: 0 },
   dislikes: { type: Number, default: 0 },

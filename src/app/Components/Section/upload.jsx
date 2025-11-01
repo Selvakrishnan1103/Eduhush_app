@@ -136,6 +136,7 @@ export default function Upload() {
           title,
           keywords,
           uploadedBy: session?.user?.name || 'anonymous',
+          uploadedByEmail: session?.user?.email || 'anonumous'
         }),
       });
 
