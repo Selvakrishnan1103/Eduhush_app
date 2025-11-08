@@ -8,6 +8,10 @@ export const metadata = {
   },
   description:
     "EduHush is a distraction-free study-based video platform designed for learners and educators. Watch, share, and explore educational content that helps you grow academically and professionally.",
+  manifest: '/manifest.json',
+
+  themeColor: '#2563eb',
+  
   keywords: [
     "EduHush",
     "study platform",
